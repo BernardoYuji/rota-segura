@@ -80,6 +80,10 @@ python rota_segura.py --salvar
 - `--endereco`: consulta um endereço do bairro fictício (o número indica a esquina: 245 = esquina 2).
 - `--salvar`: grava os mapas em PNG.
 
+- Nos dados é possível adicionar novos usúarios para que o sistema calcule novos caminhos.
+
+- Apenas é calculado rotas aonde o endereço da pessoa está próximo às márgens do rio.
+
 ## 7. Estrutura do projeto
 ```
 rota_segura/
