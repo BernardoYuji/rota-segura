@@ -59,7 +59,24 @@ usada para desenhar o mapa.
 
 **Por que escolhemos:** Separa o cálculo da visualização e deixa os dados organizados para exportar
 
-## 5. Funcionalidades
+## 5. Hipóteses e Considerações da Solução
+
+Para viabilizar a simulação do "Rota Segura" dentro do escopo acadêmico, assumimos as seguintes hipóteses:
+
+### 1. Hipóteses do Modelo Físico e Geográfico
+* **Modelo Discreto (Grid):** O bairro fictício "Vila Esperança" foi modelado como um grafo não-direcionado ponderado, onde as esquinas são vértices e as ruas são arestas. Considerou-se a distância euclidiana/linear a pé entre as esquinas.
+* **Pontos de Alojamento Limitados:** A capacidade dos abrigos é binária no modelo de decisão (aberto vs. lotado). Abrigos lotados são removidos dinamicamente do conjunto de destinos válidos antes do cálculo de menor caminho.
+* **Velocidade de Deslocamento:** Considera-se uma velocidade média padrão de caminhada a pé para estimar o tempo estimado de chegada (ETA) nas tabelas e relatórios.
+
+### 2. Hipóteses de Alagamento e Sensores
+* **Atualização em Tempo Real (Simulada):** Assume-se que os dados dos pluviômetros e sensores de nível do córrego mudam de estado de forma síncrona. Quando um limiar de risco é atingido, as arestas correspondentes às ruas afetadas são removidas do grafo.
+* **Gatilho de Risco:** O sistema assume que apenas moradores cujos endereços estejam adjacentes às zonas de escoamento do córrego ou rotas de escoamento críticas necessitam de rota de fuga ativa, otimizando o processamento computacional.
+
+### 3. Considerações de Engenharia de Software e Algoritmos
+* **Invalidação de Cache por Versão:** O sistema considera que o cache de rotas (Memoização) deve ser invalidado rigidamente sempre que a "versão do grafo" muda (ou seja, quando o estado de alagamento das ruas é alterado pelos sensores). Isso evita que um morador receba uma rota antiga e potencialmente perigosa.
+* **Separação de Camadas:** A lógica de cálculo (Dijkstra + Tabulação) é estritamente desacoplada da camada de apresentação (Matplotlib / CLI), permitindo que a mesma rota tabulada seja exportada para CSV ou renderizada visualmente.
+
+## 6. Funcionalidades
 - [x] Verifica se o morador está em risco de alagamento
 - [x] Calcula a rota a pé até o abrigo mais próximo disponível (ignora abrigos lotados)
 - [x] Evita ruas alagadas
@@ -68,7 +85,7 @@ usada para desenhar o mapa.
 - [x] Mapa desenhado com matplotlib, com rota numerada, trechos alagados, abrigos e casa
 - [x] Consulta de endereço digitado pelo usuário
 
-## 6. Como executar
+## 7. Como executar
 Requisitos: Python e matplotlib.
 ```
 pip install matplotlib
@@ -84,14 +101,14 @@ python rota_segura.py --salvar
 
 - Apenas é calculado rotas aonde o endereço da pessoa está próximo às márgens do rio.
 
-## 7. Estrutura do projeto
+## 8. Estrutura do projeto
 ```
 rota_segura/
 ├── rota_segura.py  
 └── README.md
 ```
 
-## 8. Limitações e próximos passos
+## 9. Limitações e próximos passos
 - [Dados e alagamentos são simulados; na versão real viriam dos sensores IoT]
 - [Mapa fictício; na versão real usaria o mapa da cidade]
 - [Ideias futuras: Melhorar a qualidade do mapa para se tornar mais fácil para as pessoas que possuem uma certa limitação de se localizarem.]
